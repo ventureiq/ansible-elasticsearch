@@ -1,6 +1,8 @@
 
 - name: reload systemd configuration
   become: yes
+  when:
+    - es_use_systemctl
   command: systemctl daemon-reload
 
 # Restart service and ensure it is enabled
