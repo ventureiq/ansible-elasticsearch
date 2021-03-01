@@ -3,6 +3,7 @@
   become: yes
   systemd:
     daemon_reload: true
+  when: ansible_is_docker != true
 
 # Restart service and ensure it is enabled
 
