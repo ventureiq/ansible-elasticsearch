@@ -1,6 +1,3 @@
-VERSION:
-  - 7.x
-  - 6.x
 OS:
   - ubuntu-1404
   - ubuntu-1604
@@ -12,8 +9,10 @@ OS:
   - centos-8
   - amazonlinux-2
 TEST_TYPE:
-  - oss
-  - oss-upgrade
-  - oss-to-xpack-upgrade
-  - xpack
-  - xpack-upgrade
+  - custom-config
+  - default
+  - license
+  - oss-to-default-upgrade
+  - security
+  - trial
+  - upgrade
