@@ -10,8 +10,6 @@
   become: yes
   shell: 'yum versionlock list | grep {{es_package_name}} | grep -c "{{es_version}}"'
   register: es_requested_version_locked
-  args:
-    warn: false
   failed_when: False
   changed_when: False
   check_mode: False
@@ -19,8 +17,6 @@
 - name: RedHat - lock elasticsearch version
   become: yes
   shell: yum versionlock delete 0:elasticsearch* ; yum versionlock add {{ es_package_name }}-{{ es_version }}
-  args:
-    warn: false
   when:
     - es_version_lock
     - es_requested_version_locked is defined
@@ -30,8 +26,6 @@
   become: yes
   shell: yum versionlock list | grep -c elasticsearch
   register: es_version_locked
-  args:
-    warn: false
   failed_when: False
   changed_when: False
   check_mode: False
@@ -39,8 +33,6 @@
 - name: RedHat - unlock elasticsearch version
   become: yes
   shell: yum versionlock delete 0:elasticsearch*
-  args:
-    warn: false
   when:
     - not es_version_lock
     - es_version_locked is defined
