@@ -1,29 +1,39 @@
+# ARCHIVED
+
+This project is no longer maintained.
+
+You are welcomed to keep using it and adapting it to work for your own needs, including with Elasticsearch [8.x](docs/8x-support.md).
+
+For alternative getting started experiences, you may want to try one of these options:
+
+- Start a [free trial on Elastic Cloud](https://www.elastic.co/cloud/elasticsearch-service/signup), our hosted service.
+- Take a look at [Elastic Cloud on Kubernetes (ECK)](https://elastic.co/guide/en/cloud-on-k8s/current/k8s-quickstart.html) for launching the stack via Kubernetes.
+- Read our [Running the Elastic Stack on Docker](https://www.elastic.co/guide/en/elastic-stack-get-started/current/get-started-docker.html) guide.
+- Take a look at the [Elastic Stack Terraform provider.](https://github.com/elastic/terraform-provider-elasticstack)
+
 # ansible-elasticsearch
-[![Build Status](https://img.shields.io/jenkins/s/https/devops-ci.elastic.co/job/elastic+ansible-elasticsearch+master.svg)](https://devops-ci.elastic.co/job/elastic+ansible-elasticsearch+master/)
 [![Ansible Galaxy](https://img.shields.io/badge/ansible--galaxy-elastic.elasticsearch-blue.svg)](https://galaxy.ansible.com/elastic/elasticsearch/)
 
-**THIS ROLE IS FOR 7.x & 6.x**
 
-Ansible role for 7.x/6.x Elasticsearch.  Currently this works on Debian and RedHat based linux systems. Tested platforms are:
+**THIS ROLE IS FOR 7.x & 6.x**, but should still work with 8.x (see [note](docs/8x-support.md)).
 
-* Ubuntu 14.04
+Ansible role for 7.x/6.x Elasticsearch - tests used to run and pass on the below platforms:
+
 * Ubuntu 16.04
 * Ubuntu 18.04
+* Ubuntu 20.04
 * Debian 8
 * Debian 9
 * Debian 10
 * CentOS 7
-* CentOS 8
 * Amazon Linux 2
-
-The latest Elasticsearch versions of 7.x & 6.x are actively tested.
 
 ## BREAKING CHANGES
 
 ### Notice about multi-instance support
 
-* If you use only one instance but want to upgrade from an older ansible-elasticsearch version, follow [upgrade procedure](https://github.com/elastic/ansible-elasticsearch/blob/master/docs/multi-instance.md#upgrade-procedure)
-* If you install more than one instance of Elasticsearch on the same host (with different ports, directory and config files), **do not update to ansible-elasticsearch >= 7.1.1**, please follow this [workaround](https://github.com/elastic/ansible-elasticsearch/blob/master/docs/multi-instance.md#workaround) instead.
+* If you use only one instance but want to upgrade from an older ansible-elasticsearch version, follow [upgrade procedure](https://github.com/elastic/ansible-elasticsearch/blob/main/docs/multi-instance.md#upgrade-procedure)
+* If you install more than one instance of Elasticsearch on the same host (with different ports, directory and config files), **do not update to ansible-elasticsearch >= 7.1.1**, please follow this [workaround](https://github.com/elastic/ansible-elasticsearch/blob/main/docs/multi-instance.md#workaround) instead.
 * For multi-instances use cases, we are now recommending Docker containers using our official images (https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html).
 
 ### Removing the MAX_THREAD settings
@@ -50,7 +60,7 @@ recent license change.
 This Ansible role will fail if `oss_version` is set to `true` and `es_version` is greater than 
 `7.11.0`.
 
-See [Doubling down on open, Part II](https://www.elastic.co/blog/licensing-change for more details)
+See [Doubling down on open, Part II](https://www.elastic.co/blog/licensing-change)
 blog post for more details.
 
 #### How to override configuration files provided by ansible-elasticsearch?
@@ -69,7 +79,7 @@ This role uses the json_query filter which [requires jmespath](https://github.co
 Create your Ansible playbook with your own tasks, and include the role elasticsearch. You will have to have this repository accessible within the context of playbook.
 
 ```sh
-ansible-galaxy install elastic.elasticsearch,v7.11.1
+ansible-galaxy install elastic.elasticsearch,v7.17.0
 ```
 
 Then create your playbook yaml adding the role elasticsearch.
@@ -83,16 +93,17 @@ The simplest configuration therefore consists of:
   roles:
     - role: elastic.elasticsearch
   vars:
-    es_version: 7.11.1
+=======
+    es_version: 7.17.0
 ```
 
-The above installs Elasticsearch 7.11.1 in a single node 'node1' on the hosts 'localhost'.
+The above installs Elasticsearch 7.17.0 in a single node 'node1' on the hosts 'localhost'.
 
 **Note**:
-Elasticsearch default version is described in [`es_version`](https://github.com/elastic/ansible-elasticsearch/blob/master/defaults/main.yml#L2). You can override this variable in your playbook to install another version.
-While we are testing this role only with one 7.x and one 6.x version (respectively [7.11.1](https://github.com/elastic/ansible-elasticsearch/blob/master/defaults/main.yml#L2) and [6.8.14](https://github.com/elastic/ansible-elasticsearch/blob/master/.kitchen.yml#L22) at the time of writing), this role should work with other versions also in most cases.
+Elasticsearch default version is described in [`es_version`](https://github.com/elastic/ansible-elasticsearch/blob/main/defaults/main.yml#L2). You can override this variable in your playbook to install another version.
+While we are testing this role only with one 7.x and one 6.x version (respectively [7.17.0](https://github.com/elastic/ansible-elasticsearch/blob/main/defaults/main.yml#L2) and [6.8.23](https://github.com/elastic/ansible-elasticsearch/blob/main/.kitchen.yml#L22) at the time of writing), this role should work with other versions also in most cases.
 
-This role also uses [Ansible tags](http://docs.ansible.com/ansible/playbooks_tags.html). Run your playbook with the `--list-tasks` flag for more information.
+This role also uses [Ansible tags](https://docs.ansible.com/ansible/2.9/user_guide/playbooks_tags.html). Run your playbook with the `--list-tasks` flag for more information.
 
 ## Testing
 
@@ -253,9 +264,12 @@ An example of a three server deployment is shown below.  The first server holds 
       cluster.name: "test-cluster"
       cluster.initial_master_nodes: "elastic02"
       discovery.seed_hosts: "elastic02:9300"
+      http.host: 0.0.0.0
       http.port: 9200
       node.data: false
       node.master: true
+      transport.host: 0.0.0.0
+      transport.port: 9300
       bootstrap.memory_lock: false
     es_plugins:
      - plugin: ingest-attachment
@@ -270,9 +284,12 @@ An example of a three server deployment is shown below.  The first server holds 
       cluster.name: "test-cluster"
       cluster.initial_master_nodes: "elastic02"
       discovery.seed_hosts: "elastic02:9300"
+      http.host: 0.0.0.0
       http.port: 9200
       node.data: true
       node.master: false
+      transport.host: 0.0.0.0
+      transport.port: 9300
       bootstrap.memory_lock: false
     es_plugins:
       - plugin: ingest-attachment
@@ -284,9 +301,12 @@ An example of a three server deployment is shown below.  The first server holds 
     es_config:
       cluster.name: "test-cluster"
       discovery.seed_hosts: "elastic02:9300"
+      http.host: 0.0.0.0
       http.port: 9200
       node.data: true
       node.master: false
+      transport.host: 0.0.0.0
+      transport.port: 9300
       bootstrap.memory_lock: false
     es_plugins:
       - plugin: ingest-attachment
@@ -391,7 +411,7 @@ If you don't have a license you can enable the 30-day trial by setting `es_xpack
 
 X-Pack configuration parameters can be added to the elasticsearch.yml file using the normal `es_config` parameter.
 
-For a full example see [here](https://github.com/elastic/ansible-elasticsearch/blob/master/test/integration/xpack-upgrade.yml)
+For a full example see [here](https://github.com/elastic/ansible-elasticsearch/blob/main/test/integration/xpack-upgrade.yml)
 
 #### Important Note for Native Realm Configuration
 
@@ -404,7 +424,7 @@ These can either be set to a user declared in the file based realm, with admin p
 
 #### X-Pack Security SSL/TLS
 
-* To configure your cluster with SSL/TLS for HTTP and/or transport communications follow the [SSL/TLS setup procedure](https://github.com/elastic/ansible-elasticsearch/blob/master/docs/ssl-tls-setup.md)
+* To configure your cluster with SSL/TLS for HTTP and/or transport communications follow the [SSL/TLS setup procedure](https://github.com/elastic/ansible-elasticsearch/blob/main/docs/ssl-tls-setup.md)
 
 
 ### Additional Configuration
@@ -413,7 +433,7 @@ In addition to es_config, the following parameters allow the customization of th
 
 * ```oss_version```  Default `false`. Setting this to `true` will install the oss release of Elasticsearch (for version <7.11.0 only).
 * `es_xpack_trial` Default `false`. Setting this to `true` will start the 30-day trail once the cluster starts.
-* ```es_version``` (e.g. "7.11.1").
+* ```es_version``` (e.g. "7.17.0").
 * ```es_api_host``` The host name used for actions requiring HTTP e.g. installing templates. Defaults to "localhost".
 * ```es_api_port``` The port used for actions requiring HTTP e.g. installing templates. Defaults to 9200. **CHANGE IF THE HTTP PORT IS NOT 9200**
 * ```es_api_basic_auth_username``` The Elasticsearch username for making admin changing actions. Used if Security is enabled. Ensure this user is admin.
@@ -490,7 +510,7 @@ es_keystore_entries:
 
 
 
-This role ships with sample templates located in the [test/integration/files/templates-7.x](https://github.com/elastic/ansible-elasticsearch/tree/master/test/integration/files/templates-7.x) directory. `es_templates_fileglob` variable is used with the Ansible [with_fileglob](http://docs.ansible.com/ansible/playbooks_loops.html#id4) loop. When setting the globs, be sure to use an absolute path.
+This role ships with sample templates located in the [test/integration/files/templates-7.x](https://github.com/elastic/ansible-elasticsearch/tree/main/test/integration/files/templates-7.x) directory. `es_templates_fileglob` variable is used with the Ansible [with_fileglob](http://docs.ansible.com/ansible/playbooks_loops.html#id4) loop. When setting the globs, be sure to use an absolute path.
 
 ### Proxy
 
