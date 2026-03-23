@@ -8,11 +8,11 @@
 - name: Set backward compatibility for deprecated es_enable_xpack variable
   when: es_enable_xpack is defined and not es_enable_xpack
   block:
-  - name: Set fact oss_version when using es_enable_xpack
-    set_fact: oss_version=true
-  - name: Warn about deprecated es_enable_xpack variable
-    debug:
-      msg: "WARNING: es_enable_xpack variable is now deprecated. You should use oss_version instead"
+    - name: Set fact oss_version when using es_enable_xpack
+      set_fact: oss_version=true
+    - name: Warn about deprecated es_enable_xpack variable
+      debug:
+        msg: "WARNING: es_enable_xpack variable is now deprecated. You should use oss_version instead"
 
 - name: Set the defaults here otherwise they can't be overriden in the same play if the role is called twice
   set_fact:

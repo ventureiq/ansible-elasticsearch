@@ -78,8 +78,8 @@
         mode: "644"
         force: yes
       notify:
-       - reload systemd configuration
-       - restart elasticsearch
+        - reload systemd configuration
+        - restart elasticsearch
 
 - name: Copy jvm.options File
   become: yes

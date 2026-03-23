@@ -2,24 +2,24 @@
 
 - set_fact: "es_major_version={{ es_version.split('.')[0] }}.x"
   when:
-      - es_major_version is undefined
+    - es_major_version is undefined
   tags:
-      - always
+    - always
 
 - name: os-specific vars
   include_vars: "{{ansible_os_family}}.yml"
   tags:
-      - always
+    - always
 
 - name: set compatibility variables
   include_tasks: compatibility-variables.yml
   tags:
-      - always
+    - always
 
 - name: check-set-parameters
   include_tasks: elasticsearch-parameters.yml
   tags:
-      - always
+    - always
 
 - name: use snapshot release
   include_tasks: snapshot-release.yml
@@ -29,35 +29,35 @@
   include_tasks: java.yml
   when: es_java_install
   tags:
-      - java
+    - java
 
 - name: include elasticsearch.yml
   include_tasks: elasticsearch.yml
   tags:
-      - install
+    - install
 
 - name: include elasticsearch-config.yml
   include_tasks: elasticsearch-config.yml
   tags:
-      - config
+    - config
 
 - name: include elasticsearch-plugins.yml
   include_tasks: elasticsearch-plugins.yml
   when: es_plugins is defined or es_plugins_reinstall
   tags:
-      - plugins
+    - plugins
 
   #We always execute xpack as we may need to remove features
 - name: include xpack/elasticsearch-xpack.yml
   include_tasks: xpack/elasticsearch-xpack.yml
   tags:
-      - xpack
+    - xpack
 
 - name: include elasticsearch-ssl.yml
   include_tasks: elasticsearch-ssl.yml
   when: es_enable_http_ssl or es_enable_transport_ssl
   tags:
-      - xpack
+    - xpack
 
 - name: flush handlers
   meta: flush_handlers
@@ -77,9 +77,9 @@
 - name: set fact manage_native_realm to true
   set_fact: manage_native_realm=true
   when:
-   - es_start_service
-   - not oss_version
-   - (es_users is defined and es_users.native is defined) or (es_roles is defined and es_roles.native is defined)
+    - es_start_service
+    - not oss_version
+    - (es_users is defined and es_users.native is defined) or (es_roles is defined and es_roles.native is defined)
 
 # If playbook runs too fast, Native commands could fail as the Native Realm is not yet up
 - name: Wait {{ es_api_sleep }} seconds for the Native Realm to come up
@@ -109,4 +109,4 @@
   include_tasks: elasticsearch-template.yml
   when: es_templates | bool
   tags:
-      - templates
+    - templates
